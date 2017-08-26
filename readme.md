@@ -77,7 +77,7 @@ Then, I spent a lot of time to make the bounding boxes stable. Since I am workin
 I achieve this by doing following, in each frame, the heatmap m after thresholding is precessed by assigning all non-zero element to be 10, and the global heatmap M will be averaged on m, i.e. M = (m + M) / 2, in this way, newly car pixel is 10, overlapped pixel between m and M is > 10, and old car pixel will be divided by 2.
 The bounding box for the example image is
 
-[Here](https://youtu.be/-jq4X-E60a0) is the result of test on video.
+[Here](https://youtu.be/-jq4X-E60a0) is the result of detection for project video.
 
 
 ### Discussion
