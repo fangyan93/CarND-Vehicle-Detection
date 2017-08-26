@@ -15,7 +15,6 @@ The goals / steps of this project are the following:
 [image5]: ./images/labels_test6.jpg
 [image6]: ./images/output_test6.jpg
 [image7]: ./images/test6.jpg
-[video1]: ./project_video.mp4
 
 
 ### Histogram of Oriented Gradients (HOG)
@@ -48,10 +47,14 @@ I am using 4 scales windows, each of them cover different area. I only search ro
 ![alt text][image3]
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+Ultimately I searched on 4 scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  For this example image, 
+![alt text][image7]
 
-Ultimately I searched on 4 scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Here are some example images:
+The heatmap created for test 
 ![alt text][image4]
----
+After that, the heatmap is labeled and bounding boxes are drawn on that.
+
 I tried different color spaces such as RGB, HSV and HLS, as well as YCrCb, where YCrCb provides best results, also, I tried RBF kernal and different combinations of (C, Gamma) values, where linear kernel with C = 100 and Gamma = 0.01 has good performance. 
 
 ### Video Implementation
@@ -63,22 +66,21 @@ Here's a [link to my video result](./project_video.mp4)
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
 I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
+The labeled heatmap for the example image above is:
+![alt text][image5]
 
 Then, I spent a lot of time to make the bounding boxes stable. Since I am working on a continuous frames of a video, I have a global heatmap M, recording previous heatmap. If a pixel is identified as a car in current frame, then I assume it should be car, if it is not a car in current frame but is a car at last frame, it will be preserved, assuming that classification at current frame is not perfect. But if a pixel is identified as not a car at several straight frames, I assume it is not a car. 
 I achieve this by doing following, in each frame, the heatmap m after thresholding is precessed by assigning all non-zero element to be 10, and the global heatmap M will be averaged on m, i.e. M = (m + M) / 2, in this way, newly car pixel is 10, overlapped pixel between m and M is > 10, and old car pixel will be divided by 2.
+The bounding box for the example image is
+![alt text][image6]
 
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
-
+[Here](https://youtu.be/-jq4X-E60a0) is the result of test on video.
 ### Here are six frames and their corresponding heatmaps:
 ![alt text][image5]
 ### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
 ![alt text][image6]
 ### Here the resulting bounding boxes are drawn onto the last frame in the series:
 ![alt text][image7]
-
-
-
----
 
 ### Discussion
 
